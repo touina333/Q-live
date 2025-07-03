@@ -381,6 +381,67 @@
       color: gold;
       cursor: pointer;
     }
+    /* تحسين العرض على الأجهزة الصغيرة */
+@media (max-width: 768px) {
+  .channel-card {
+    width: calc(50% - 15px);
+  }
+  .match-card {
+    padding: 15px;
+  }
+  .team img {
+    width: 60px;
+    height: 60px;
+  }
+  .team-name {
+    font-size: 15px;
+  }
+  .league-name {
+    font-size: 18px;
+  }
+  .watch-btn {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .channel-card {
+    width: 100%;
+  }
+
+  .league-name {
+    font-size: 16px;
+  }
+
+  .team {
+    width: 45%;
+  }
+
+  .team-name {
+    font-size: 14px;
+    text-align: center;
+  }
+
+  .navbar {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .watch-btn {
+    font-size: 13px;
+    padding: 8px 18px;
+  }
+
+  #search-input {
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+
+  .match-time {
+    font-size: 14px;
+  }
+}
 
     @media (max-width: 480px) {
       #app-popup {
