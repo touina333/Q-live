@@ -2,14 +2,10 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Q LIVE - بث المباريات والقنوات</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet" />
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     body {
       background-color: #121212;
       color: #fff;
@@ -29,12 +25,14 @@
       text-align: center;
       border-bottom: 2px solid gold;
       padding: 15px 0 10px;
+      box-sizing: border-box;
     }
 
     header h1 {
       font-size: 28px;
       color: gold;
       margin: 10px 0 5px;
+      letter-spacing: 1px;
       text-shadow: 0 0 10px #f0b90b;
     }
 
@@ -55,6 +53,7 @@
       flex-wrap: wrap;
       width: 100%;
       max-width: 700px;
+      box-sizing: border-box;
     }
 
     .navbar a {
@@ -80,7 +79,8 @@
       width: 100%;
       max-width: 700px;
       padding: 20px;
-      display: none;
+      box-sizing: border-box;
+      display: none; /* Hide both initially */
       flex-direction: column;
       gap: 25px;
     }
@@ -96,6 +96,7 @@
       padding: 20px;
       box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
       text-align: center;
+      position: relative;
     }
 
     .league {
@@ -123,7 +124,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      flex-wrap: wrap;
+      position: relative;
       margin-bottom: 12px;
     }
 
@@ -131,7 +132,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      width: 45%;
+      width: 100px;
     }
 
     .team img {
@@ -150,10 +151,13 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      text-align: center;
     }
 
     .match-status {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       background-color: gold;
       color: black;
       font-weight: 700;
@@ -161,14 +165,15 @@
       border-radius: 22px;
       font-size: 15px;
       box-shadow: 0 0 12px rgba(255, 215, 0, 0.8);
-      margin: 10px auto;
+      min-width: 50px;
+      user-select: none;
     }
 
     .match-time {
       font-size: 16px;
       color: #ccc;
       font-weight: 600;
-      margin-top: 10px;
+      margin-top: 44px;
     }
 
     .watch-btn {
@@ -189,8 +194,17 @@
       box-shadow: 0 7px 22px rgba(255, 182, 0, 1);
     }
 
+    /* Channels styling */
+    .channels-header {
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: center;
+      position: relative;
+    }
+
     #search-input {
       width: 100%;
+      max-width: 700px;
       padding: 10px 15px;
       font-size: 16px;
       border-radius: 30px;
@@ -199,6 +213,7 @@
       box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
       background-color: #222;
       color: white;
+      box-sizing: border-box;
       margin-bottom: 20px;
       direction: rtl;
       text-align: right;
@@ -215,10 +230,13 @@
       background: #1f1f1f;
       border-radius: 12px;
       padding: 15px;
-      width: calc(33.33% - 20px);
+      width: calc((100% / 3) - 20px);
       box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
       cursor: pointer;
       transition: 0.3s;
+      position: relative;
+      box-sizing: border-box;
+      user-select: none;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -250,35 +268,130 @@
       width: 100%;
     }
 
-    @media (max-width: 768px) {
-      .channel-card {
-        width: calc(50% - 20px);
-      }
+    .favorite-star {
+      position: absolute;
+      top: 117px;
+      left: center;
+      font-size: 24px;
+      color: rgba(255, 215, 0, 0.4);
+      cursor: pointer;
+      user-select: none;
+      transition: color 0.3s ease;
+      z-index: 10;
+    }
+
+    .favorite-star.active {
+      color: gold;
+      text-shadow: 0 0 8px gold;
+    }
+
+    /* شاشة الفيديو الكاملة */
+    #fullScreenVideo {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: black;
+      z-index: 10000;
+      outline: none;
+    }
+
+    #close-fullscreen-btn {
+      display: none;
+      position: fixed;
+      top: 15px;
+      right: 20px;
+      z-index: 11000;
+      background-color: gold;
+      color: black;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 15px;
+      cursor: pointer;
+      box-shadow: 0 0 10px gold;
+      user-select: none;
+      transition: background-color 0.3s ease;
+    }
+
+    #close-fullscreen-btn:hover {
+      background-color: #cc9900;
+    }
+    
+    /* بطاقة منبثقة لتحميل التطبيق */
+    #app-popup {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #1f1f1f;
+      border: 2px solid gold;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+      border-radius: 15px;
+      padding: 15px;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      max-width: 320px;
+      box-sizing: border-box;
+    }
+
+    #app-popup img {
+      width: 50px;
+      height: 50px;
+      flex-shrink: 0;
+    }
+
+    #app-popup h3 {
+      margin: 0;
+      color: gold;
+      font-size: 18px;
+    }
+
+    #app-popup p {
+      margin: 5px 0;
+      color: #ccc;
+      font-size: 14px;
+    }
+
+    .download-btn {
+      background-color: gold;
+      color: black;
+      font-weight: bold;
+      padding: 6px 14px;
+      border-radius: 30px;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+
+    .download-btn:hover {
+      background-color: #ffcc00;
+    }
+
+    .close-popup {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      background: none;
+      border: none;
+      font-size: 20px;
+      color: gold;
+      cursor: pointer;
     }
 
     @media (max-width: 480px) {
-      header h1 {
-        font-size: 20px;
+      #app-popup {
+        bottom: 15px;
+        right: 10px;
+        left: 10px;
+        flex-direction: column;
+        align-items: flex-start;
       }
-
-      header p,
-      .team-name,
-      .league-name,
-      .match-time,
-      .watch-btn,
-      .navbar a,
-      .channel-card h3,
-      #search-input {
-        font-size: 14px;
-      }
-
-      .channel-card {
-        width: 100%;
-      }
-
-      .match-status {
-        font-size: 13px;
-        padding: 6px 12px;
+      #app-popup .popup-content {
+        flex-direction: column;
       }
     }
   </style>
